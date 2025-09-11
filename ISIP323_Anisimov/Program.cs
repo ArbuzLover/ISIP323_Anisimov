@@ -98,6 +98,7 @@ else
                 menu();
                 break;
             case 0:
+                Console.WriteLine("ВЫХОД");
                 return;
             default:
                 Console.WriteLine("Нету такого номера");
