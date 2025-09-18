@@ -199,40 +199,42 @@ static void SearchProducts(List<Product> products)
             break;
     }
 
-void poiskID()
-{
-    Console.WriteLine("Введите id товара");
-    int temp = Convert.ToInt32(Console.ReadLine());
-    foreach (Product t in products)
+    void poiskID()
     {
-        if (t.id == temp)
+        bool flag = true;
+        Console.WriteLine("Введите id товара");
+        int temp = Convert.ToInt32(Console.ReadLine());
+        foreach (Product t in products)
         {
-            Console.WriteLine($"{t.Name}, {t.id}, {t.price}, {t.quantity},{t.InStock},{t.Category}");
-        }
-        else
-        {
-            Console.WriteLine("товар не найден");
-        }
-    }
-}
-void poiskName()
-{
-    Console.WriteLine("Введите навзание товара");
-    string temp = Console.ReadLine();
-    foreach (Product t in products)
-    {
-        if (t.Name == temp)
-        {
-            Console.WriteLine($"{t.Name}, {t.id}, {t.price}, {t.quantity},{t.InStock},{t.Category}");
+            if (t.id == temp)
+            {
+                Console.WriteLine($"{t.Name}, {t.id}, {t.price}, {t.quantity},{t.InStock},{t.Category}");
+                flag = false;
             }
-        else
-        {
-            Console.WriteLine("товар не найден");
+
+            if (flag) { Console.WriteLine("товар не найден"); }
         }
     }
-}
-void poiskKategory()
+    void poiskName()
+    {
+        bool flag = true;
+        Console.WriteLine("Введите навзание товара");
+        string temp = Console.ReadLine();
+        foreach (Product t in products)
+        {
+            if (t.Name == temp)
+            {
+                Console.WriteLine($"{t.Name}, {t.id}, {t.price}, {t.quantity},{t.InStock},{t.Category}");
+            }
+
+        }
+        if (flag) { Console.WriteLine("товар не найден"); }
+
+    }
+
+        void poiskKategory()
 {
+    bool flag = true;
     Console.WriteLine("выберете категорию water=1,\r\n snack=2,\r\n chebumany=3");
     int temp = Convert.ToInt32(Console.ReadLine());
     foreach (Product t in products)
@@ -240,16 +242,46 @@ void poiskKategory()
         if (t.Category == (Category)temp)
         {
             Console.WriteLine($"{t.Name}, {t.id}, {t.price}, {t.quantity},{t.InStock},{t.Category}");
-            }
-        else
-        {
-            Console.WriteLine("товар не найден");
         }
     }
-}
+    if (flag) { Console.WriteLine("товар не найден"); }
 
 }
+}
 
+
+//static void ShowSalesHistoryAndUndo()
+//{
+//    if (!salesHistory.Any()) { Console.WriteLine("История продаж пуста."); return; }
+//    Console.WriteLine("История продаж (последняя сверху):");
+//    foreach (var s in salesHistory) Console.WriteLine($"Код {s.Code} | {s.Name} | Количество: {s.Quantity} | Сумма: {s.Sum:F2}");
+//    Console.Write("Отменить последнюю продажу? (y/n): ");
+//    if ((Console.ReadLine() ?? "").ToLower() == "y")
+//    {
+//        var last = salesHistory.Pop();
+//        var prod = products.FirstOrDefault(x => x.Code == last.Code);
+//        if (prod != null) prod.Quantity += last.Quantity;
+//        Console.WriteLine($"Последняя продажа отменена. Возвращено {last.Quantity} шт товара \"{last.Name}\".");
+//    }
+//}
+
+//static void PrintSalesReport()
+//{
+//    if (!salesHistory.Any()) { Console.WriteLine("Продаж нет."); return; }
+//    var grouped = salesHistory
+//    .GroupBy(s => s.Code)
+//    .Select(g => new { Code = g.Key, Name = g.First().Name, TotalQty = g.Sum(x => x.Quantity), TotalSum = g.Sum(x => x.Sum) })
+//    .ToList();
+
+//    Console.WriteLine("=== Отчёт о продажах ===");
+//    decimal grandTotal = 0;
+//    foreach (var item in grouped)
+//    {
+//        Console.WriteLine($"Код {item.Code} | {item.Name} | Продано: {item.TotalQty} шт | Сумма: {item.TotalSum:F2} руб");
+//        grandTotal += item.TotalSum;
+//    }
+//    Console.WriteLine($"Итого по всем продажам: {grandTotal:F2} руб");
+//}
 
 
 
