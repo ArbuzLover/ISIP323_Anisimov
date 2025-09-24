@@ -31,17 +31,50 @@ while (true)
     Console.WriteLine();
     switch (choice)
     {
-        case "1": //KolvoSlov(); break;
-        case "2": ; break;
-        case "3": ; break;
+        case "1": KolvoWords(); break;
+        case "2": ShortWord(); break;
+        case "3": KolvoPredl(); break;
         case "4": ; break;
-        case "5": ; break;
+        case "5": LongWord(); break;
         case "6": ; break;
         case "0": return;
         default: Console.WriteLine("Неверная команда. Попробуйте снова."); break;
     }
 }
+void KolvoWords()
+{
+    Console.WriteLine($"Количество слов в тексте: {TextList.Length}");
+}
 
+void ShortWord()
+{
+    string min = "   ";
+    foreach (var word in TextList)
+    {
+        if (word.Length < min.Length){ min = word; break; }
+        else { continue; }
+    }
+    Console.WriteLine($"Самое короткое слово: '{min}' ");
+}
 
+void LongWord()
+{
+    string max = " ";
+    foreach (var word in TextList)
+    {
+        if (word.Length > max.Length) { max = word;}
+    }
+    Console.WriteLine($"Самое длинное слово: '{max}' ");
+}
+
+void KolvoPredl()
+{
+    int count = 0;
+    foreach (int i in Text)
+    {
+        if (Text[i] == '.') count++;
+    }
+    Console.WriteLine($"Количество предложений в тексте: {count}");
+}
 
 
