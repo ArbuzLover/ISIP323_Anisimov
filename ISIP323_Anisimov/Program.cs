@@ -16,7 +16,8 @@ while(Text.Length < 100)
 }
 string[] TextList = Text.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 List<textClass> textClasses = new List<textClass>();
-
+textClasses.Add(new textClass(Text, TextList.Length, ShortWord(TextList), KolvoPredl(Text), KolvoGlasn(Text), KolvoSoglas(Text), LongWord(TextList), Stat(Text)));
+int id = 0;
 while (true)
 {
     Console.WriteLine("\n=== МЕНЮ ===");
@@ -27,18 +28,18 @@ while (true)
     Console.WriteLine("5 - Самое длинное слово");
     Console.WriteLine("6 - Статистика каждой буквы");
     Console.WriteLine("7 - Ввести новый текст)");
-    //Console.WriteLine("8 - Отчёт о продажах");
+    Console.WriteLine("8 - Вывод статистики прошлого текста");
     Console.WriteLine("0 - Выход");
     Console.Write("Выберите команду: ");
     string choice = Console.ReadLine().Trim();
     Console.WriteLine();
     switch (choice)
     {
-        case "1": Console.WriteLine($"Количество слов в тексте: {TextList.Length}"); ; break;
-        case "2": Console.WriteLine($"Самое короткое слово: '{ShortWord(TextList)}' "); break;
-        case "3": Console.WriteLine($"Количество предложений в тексте: {KolvoPredl(Text)}"); ; break;
-        case "4": Console.WriteLine($"Количество гласных: {KolvoGlasn(Text)}, количество согласных: {KolvoSoglas(Text)} "); ; break;
-        case "5": Console.WriteLine($"Самое длинное слово: '{LongWord(TextList)}' "); ; break;
+        case "1": Console.WriteLine($"Количество слов в тексте: {textClasses[id].countWords}"); break;
+        case "2": Console.WriteLine($"Самое короткое слово: '{textClasses[id].shortWord}' "); break;
+        case "3": Console.WriteLine($"Количество предложений в тексте: {textClasses[id].countPredl}"); ; break;
+        case "4": Console.WriteLine($"Количество гласных: {textClasses[id].countGlas}, количество согласных: {textClasses[id].countSogl} "); ; break;
+        case "5": Console.WriteLine($"Самое длинное слово: '{textClasses[id].longWord}' "); ; break;
         case "6":
             foreach (var pair in Stat(Text).OrderByDescending(x => x.Value))
             {
@@ -48,11 +49,34 @@ while (true)
                 }
             }
             ; break;
-        case "7": textClasses.Add(new textClass(Text, TextList.Length, ShortWord(TextList), KolvoPredl(Text), KolvoGlasn(Text), KolvoSoglas(Text), LongWord(TextList), Stat(Text))); break;
+        case "7": id++;Zamena(Text); break;
+        case "8": if (id < 1) { Console.WriteLine("Нету прошлого текста"); break; }
+        else
+            {
+                Console.WriteLine($"Прошлый текст: {textClasses[id - 1].text}\n Его номер: {textClasses[id - 1].id} \n Количество слов: {textClasses[id - 1].countWords} \n Самое короткое слово: {textClasses[id - 1].shortWord}" +
+                    $"\n Количество предложений: {textClasses[id - 1].countPredl} \n Количество гласных: {textClasses[id - 1].countGlas} и согласных {textClasses[id - 1].countSogl}" +
+                    $"\n Самое длинное слово: {textClasses[id - 1].longWord}");
+                break;
+            }
         case "0": return;
         default: Console.WriteLine("Неверная команда. Попробуйте снова."); break;
     }
 }
+
+void Zamena(string Text) {
+    Console.Write("Введите текст на русском(минимум 100 символов): ");
+    Text = Console.ReadLine();
+    while (Text.Length < 100)
+    {
+        Console.WriteLine("Слишком короткий текст!");
+        Console.Write("Введите текст на русском(минимум 100 символов): ");
+        Text = Console.ReadLine();
+
+    }
+    TextList = Text.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+    textClasses.Add(new textClass(Text, TextList.Length, ShortWord(TextList), KolvoPredl(Text), KolvoGlasn(Text), KolvoSoglas(Text), LongWord(TextList), Stat(Text)));
+}
+
 string ShortWord(string[] TextList)
 {
     string min = "   ";
@@ -170,21 +194,21 @@ Dictionary<char, int> Stat(string Text)
 public class textClass
 {
     static public int ids = 0;
-    public int id;
-    public string text;
-    public int countWords;
-    public string shortWord;
-    public int countPredl;
-    public int countGlas;
-    public int countSogl; 
-    public string longWord;
-    public Dictionary<char, int> Statics;
+    public int id { get; }
+    public string text { get; }
+    public int countWords { get; }
+    public string shortWord { get; }
+    public int countPredl { get; }
+    public int countGlas { get; }
+    public int countSogl    { get; }
+    public string longWord { get; }
+    public Dictionary<char, int> Statics { get; }
 
     public textClass(string Text, int countWords, string shortWord, int countPredl, int countGlas, int countSogl, string longWord, Dictionary<char, int> Statics)
     {
         ids += 1;
         id += ids;
-        this.text = text;
+        this.text = Text;
         this.countWords = countWords;
         this.shortWord = shortWord;
         this.countPredl = countPredl;
