@@ -1,4 +1,6 @@
 ﻿
+using System.Diagnostics;
+
 public enum Genre
 {
     fantasy = 0,
@@ -15,10 +17,16 @@ public class Book
 
     public Genre Genre {get; set; }
     public int Year { get; set; }
-    public decimal price { get; set; }
+    public decimal Price { get; set; }
 
-    public Book(string Name, string Author, Genre Genre, int Year, decimal Price)
+    public Book(string name, string author, Genre genre, int year, decimal price)
     {
-        
-    } 
+        Name = name;
+        Author = author;
+        Genre = genre;  
+        Year = year;
+        Price = price;
+    }
+
+    public void Vivod() { Console.WriteLine($"ID: {id} | Название: {Name} | Автор: {Author} | Жанр: {Genre} | Год создания: {Year} | Цена: {Price:F2} "); }
 }
