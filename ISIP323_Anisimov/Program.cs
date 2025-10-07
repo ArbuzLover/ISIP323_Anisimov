@@ -1,4 +1,5 @@
 ﻿
+using System.Collections.Generic;
 using System.Diagnostics;
 using static System.Net.Mime.MediaTypeNames;
 List<Book> library = new List<Book>();
@@ -8,8 +9,35 @@ library.Add(new Book("Дневник зомби", "Стив", Genre.drama, 2026,
 library.Add(new Book("Букварь", "АБВГДЕЙКО", Genre.comedy, 2000,500));
 library.Add(new Book("Макан.История успеха","Башкалова Алиса Алексеевна", Genre.fantasy, 2025,1000000));
 
-
-
+while (true)
+{
+    Console.WriteLine("\n=== Учет товаров: меню ===");
+    Console.WriteLine("1 - Показать все товары");
+    Console.WriteLine("2 - Добавить товар");
+    Console.WriteLine("3 - Удалить товар");
+    Console.WriteLine("4 - Заказать поставку (пополнить количество)");
+    Console.WriteLine("5 - Продать товар");
+    Console.WriteLine("6 - Поиск товаров (по коду, названию, категории)");
+    Console.WriteLine("7 - История продаж (и отмена последней продажи)");
+    Console.WriteLine("8 - Отчёт о продажах");
+    Console.WriteLine("0 - Выход");
+    Console.Write("Выберите команду: ");
+    string choice = Console.ReadLine().Trim();
+    Console.WriteLine();
+    switch (choice)
+    {
+        case "1": VivodAll(library); break;
+        case "2": AddBook(library); break;
+        case "3": DelBook(library); break;
+        case "4": FindBook(library); break;
+        case "5": SortByName(library); break;
+        case "6": SortByYear(library); break;
+        case "7": SortByPrice(library); break;
+        case "8": CountBooks(library); break;
+        case "0": return;
+        default: Console.WriteLine("Неверная команда. Попробуйте снова."); break;
+    }
+}
 static void VivodAll(List<Book> library)
 {
     if (!library.Any()) { Console.WriteLine("Список товаров пуст."); return; }
@@ -18,7 +46,24 @@ static void VivodAll(List<Book> library)
 
 static void AddBook(List<Book> library)
 {
-
+    Console.Write("Введите название новой книги: ");
+    string name = Console.ReadLine();
+    Console.Write("Введите название автора новой книги: ");
+    string author = Console.ReadLine();
+    Console.Write("Введите категорию");
+    Console.WriteLine("Доступные категории:");
+    foreach (var val in Enum.GetValues(typeof(Genre)))
+    Console.WriteLine($"{(int)val} - {val}");
+    int genre = Convert.ToInt32(Console.ReadLine()); 
+    Console.Write("Введите цену товара: ");
+    decimal price = Convert.ToDecimal(Console.ReadLine());
+    Console.Write("Введите количество товара: ");
+    int year = Convert.ToInt32(Console.ReadLine());
+    
+    Book book = new Book(name,author,(Genre)genre,year,price);
+    library.Add(book);
+    Console.WriteLine("Товар добавлен:");
+    book.Vivod();
 }
 
 static void DelBook(List<Book> library)
