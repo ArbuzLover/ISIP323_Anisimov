@@ -11,15 +11,15 @@ library.Add(new Book("Макан.История успеха","Башкалов�
 
 while (true)
 {
-    Console.WriteLine("\n=== Учет товаров: меню ===");
-    Console.WriteLine("1 - Показать все товары");
-    Console.WriteLine("2 - Добавить товар");
-    Console.WriteLine("3 - Удалить товар");
-    Console.WriteLine("4 - Заказать поставку (пополнить количество)");
-    Console.WriteLine("5 - Продать товар");
-    Console.WriteLine("6 - Поиск товаров (по коду, названию, категории)");
-    Console.WriteLine("7 - История продаж (и отмена последней продажи)");
-    Console.WriteLine("8 - Отчёт о продажах");
+    Console.WriteLine("\n=== Библиотека: меню ===");
+    Console.WriteLine("1 - Показать все книги");
+    Console.WriteLine("2 - Добавить книгу");
+    Console.WriteLine("3 - Удалить книгу");
+    Console.WriteLine("4 - Найти книгу");
+    Console.WriteLine("5 - Отсортировать по названию");
+    Console.WriteLine("6 - Отсортировать по годам");
+    Console.WriteLine("7 - Вывести самую дорогую и дешёвую книгу");
+    Console.WriteLine("8 - Вывести книги каждого автора");
     Console.WriteLine("0 - Выход");
     Console.Write("Выберите команду: ");
     string choice = Console.ReadLine().Trim();
@@ -68,40 +68,133 @@ static void AddBook(List<Book> library)
 
 static void DelBook(List<Book> library)
 {
+    Console.WriteLine("Введите id товара для удаления");
+    int input = Convert.ToInt32(Console.ReadLine());
 
+    foreach (Book t in library.ToList())
+    {
+        if (t.id == input)
+        {
+            library.Remove(t);
+            Console.WriteLine("Книга была удалена!");
+        }
+
+    }
 }
 
-static void FindBook(List<Book> library) 
-{ 
+static void FindBook(List<Book> library)
+{
+    Console.WriteLine("Введите поиск по какому признаку вы хотите осуществить\n" +
+  "Название-1\n" +
+  "Автор-2\n" +
+  "Жанр-3\n");
+    int temp3 = Convert.ToInt32(Console.ReadLine());
+    switch (temp3)
+    {
+        case 1:
+            bool flag1 = true;
+            Console.WriteLine("Введите возможное название книги: ");
+            string name = Console.ReadLine();
+            foreach (Book t in library)
+            {
+                if (t.Name.Contains(name)) { t.Vivod(); flag1 = false; }
+            }
+            if (flag1) { Console.WriteLine("Не нашлось такой книги :("); }
+            break;
+        case 2:
+            bool flag2 = true;
+            Console.WriteLine("Введите возможного автора: ");
+            string author = Console.ReadLine();
+            foreach (Book t in library)
+            {
+                if (t.Author.Contains(author)) { t.Vivod(); flag2 = false; }
+            }
+            if (flag2) { Console.WriteLine("Не нашлось такого автора :("); }
+            break;
+        case 3:
+            bool flag3 = true;
+            Console.WriteLine("выберете жанр fantasy=0,\r\n comedy=1,\r\n drama=2");
+            int temp = Convert.ToInt32(Console.ReadLine());
+            foreach (Book t in library)
+            {
+                if (t.Genre == (Genre)temp)
+                {
+                    t.Vivod();
+                    flag3 = false;
+                }
+            }
+            if (flag3) { Console.WriteLine("Жанр не найден!"); }
 
+            break;
+    }
 }
 
 static void SortByName(List<Book> library)
 {
-
+    var sortedBook = from p in library
+                        orderby p.Name
+                        select p;
+    foreach (var p in sortedBook)
+    { p.Vivod(); }
 }
 
 static void SortByYear(List<Book> library)
 {
-
+    var sortedBook = from p in library
+                     orderby p.Year
+                     select p;
+    foreach (var p in sortedBook)
+    { p.Vivod(); }
 }
 
 static void SortByPrice(List<Book> library) 
-{ 
+{
+    if (library.Count == 0)
+    {
+        Console.WriteLine("Список книг пуст");
+        return;
+    }
 
+    var mostExpensive = library.MaxBy(book => book.Price);
+    var cheapest = library.MinBy(book => book.Price);
+
+    Console.WriteLine("Самая дорогая книга:");
+    Console.WriteLine($"\"{mostExpensive.Name}\" - {mostExpensive.Author} | Цена: {mostExpensive.Price} руб.");
+
+    Console.WriteLine("\nСамая дешевая книга:");
+    Console.WriteLine($"\"{cheapest.Name}\" - {cheapest.Author} | Цена: {cheapest.Price} руб.");
 }
 
 static void CountBooks(List<Book> library)
 {
+    var groupedBooks = library.GroupBy(book => book.Author)
+                                 .Select(group => new
+                                 {
+                                     author = group.Key,
+                                     BookCount = group.Count(),
+                                     Books = group.ToList()
+                                 })
+                                 .OrderByDescending(x => x.BookCount);
 
+    foreach (var authorGroup in groupedBooks)
+    {
+        Console.WriteLine($"Автор: {authorGroup.author}");
+        Console.WriteLine($"Количество книг: {authorGroup.BookCount}");
+        Console.WriteLine("Книги:");
+
+        foreach (var book in authorGroup.Books)
+        {
+            Console.WriteLine($"  - \"{book.Name}\" ({book.Year}) - {book.Price} руб.");
+        }
+        Console.WriteLine();
+    }
 }
 
 public enum Genre
 {
     fantasy = 0,
     comedy = 1,
-    novel = 2,
-    drama = 3
+    drama = 2
 }
 
 public class Book
@@ -117,6 +210,8 @@ public class Book
 
     public Book(string name, string author, Genre genre, int year, decimal price)
     {
+        ids++;
+        id = ids;
         Name = name;
         Author = author;
         Genre = genre;  
