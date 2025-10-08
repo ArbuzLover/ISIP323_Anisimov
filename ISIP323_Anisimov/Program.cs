@@ -50,19 +50,19 @@ static void AddBook(List<Book> library)
     string name = Console.ReadLine();
     Console.Write("Введите название автора новой книги: ");
     string author = Console.ReadLine();
-    Console.Write("Введите категорию");
-    Console.WriteLine("Доступные категории:");
+    Console.Write("Введите жанр");
+    Console.WriteLine("Доступные жанры:");
     foreach (var val in Enum.GetValues(typeof(Genre)))
     Console.WriteLine($"{(int)val} - {val}");
     int genre = Convert.ToInt32(Console.ReadLine()); 
-    Console.Write("Введите цену товара: ");
+    Console.Write("Введите цену жанры: ");
     decimal price = Convert.ToDecimal(Console.ReadLine());
-    Console.Write("Введите количество товара: ");
+    Console.Write("Введите количество жанры: ");
     int year = Convert.ToInt32(Console.ReadLine());
     
     Book book = new Book(name,author,(Genre)genre,year,price);
     library.Add(book);
-    Console.WriteLine("Товар добавлен:");
+    Console.WriteLine("Книга добавлена:");
     book.Vivod();
 }
 
