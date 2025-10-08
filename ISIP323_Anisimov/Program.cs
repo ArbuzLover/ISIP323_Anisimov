@@ -40,7 +40,7 @@ while (true)
 }
 static void VivodAll(List<Book> library)
 {
-    if (!library.Any()) { Console.WriteLine("Список товаров пуст."); return; }
+    if (!library.Any()) { Console.WriteLine("Список книг пуст."); return; }
     foreach (var p in library) p.Vivod();
 }
 
@@ -55,9 +55,9 @@ static void AddBook(List<Book> library)
     foreach (var val in Enum.GetValues(typeof(Genre)))
     Console.WriteLine($"{(int)val} - {val}");
     int genre = Convert.ToInt32(Console.ReadLine()); 
-    Console.Write("Введите цену жанры: ");
+    Console.Write("Введите цену книги: ");
     decimal price = Convert.ToDecimal(Console.ReadLine());
-    Console.Write("Введите количество жанры: ");
+    Console.Write("Введите дату создания книги: ");
     int year = Convert.ToInt32(Console.ReadLine());
     
     Book book = new Book(name,author,(Genre)genre,year,price);
@@ -68,7 +68,7 @@ static void AddBook(List<Book> library)
 
 static void DelBook(List<Book> library)
 {
-    Console.WriteLine("Введите id товара для удаления");
+    Console.WriteLine("Введите id книги для удаления");
     int input = Convert.ToInt32(Console.ReadLine());
 
     foreach (Book t in library.ToList())
