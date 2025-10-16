@@ -1,4 +1,30 @@
-﻿
+﻿using System;
+
+while (true)
+{
+    Console.WriteLine("--------------------МЕНЮ------------------\n" +
+        "1 - РАБОТА СО СТУДЕНТАМИ\n"+
+        "2 - РАБОТА С ПРЕПОДОВАТЕЛЯМИ\n"+
+        "3 - РАБОТА С КУРСАМИ\n"+
+        "0 - ВЫХОД\n"
+        +"------------------------------------------------\n");
+    string choice = Console.ReadLine().Trim();
+    switch (choice)
+    {
+        default: Console.WriteLine("Такой команды нету, попробуйте ещё раз!");
+            break;
+        case "1":
+            Console.WriteLine();
+            break;
+        case "2":
+            
+            break;
+        case "3":
+            
+            break;
+       
+    }
+}
 
 
 public enum Sex
