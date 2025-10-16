@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
+
 List<Student> spisok_st = new List<Student>();
 List<Person> people = new List<Person>();
 List<Teacher> prepods = new List<Teacher>();
@@ -127,22 +128,16 @@ while (true)
                 case "1": add_Student(students,people); break;
                 case "2": sign_up(students, cour_stud); break;
                 case "3": int temp = Convert.ToInt32(Console.ReadLine());
-                    foreach (var pair in cour_stud)
+                    foreach (var student in students)
                     {
-                        foreach (Student s in pair.Value)
-                        {
-                            if (s.ID == temp)
-                            {
-                                Console.WriteLine($"курс:{pair.Key.NameCourse}");
-                            }
-                        }
+                        student.Print();
                     }
                     break;
                 case "0": return 1;
             }
         break;
         case "2":
-            Console.WriteLine("---------------МЕНЮ ПРЕПОДОВАТЕЛЕЙ------------------"+
+            Console.WriteLine("---------------МЕНЮ ПРЕПОДОВАТЕЛЕЙ------------------\n"+
                "1 - Добавить преподователя\n" +
                "2 - Вывести преподователя\n" +
                "0 - Выйти в основное меню\n" +
@@ -153,17 +148,17 @@ while (true)
                 default: Console.WriteLine("Такой команды нету, попробуйте ещё раз!"); break;
                 case "1": add_Teacher(prepods, people); break;
                 case "2":
-                    foreach (Teacher k in prepods)
+                    foreach (var prepod in prepods)
                     {
-                        Console.WriteLine(k.ID + " " + k.FIO);
+                        prepod.Print();
                     }
-                        
-                        break;
-                case "0": break; break;
+
+                    break;
+                case "0": break;
             }
             break;
         case "3":
-            Console.WriteLine("---------------МЕНЮ КУРСОВ------------------"+
+            Console.WriteLine("---------------МЕНЮ КУРСОВ------------------\n"+
                 "1 - Добавить курс\n" +
                 "2 - Вывести всех студентов и всех курсов\n" +
                 "0 - Выйти в основное меню\n" +
