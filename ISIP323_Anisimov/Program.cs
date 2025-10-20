@@ -1,4 +1,6 @@
 ﻿// -----------------------------------ИГРОКИ-------------------------------------------
+using static System.Net.Mime.MediaTypeNames;
+
 public class Weapon
 {
     public string Name { get; set; }
@@ -43,7 +45,42 @@ public class Player
 
     public void TakeDamage(Enemy attacker)
     {
+        int actualDamage = attacker.Attack;
 
+        if (IsDefending)
+        {
+            Random random = new Random();
+            if (random.NextDouble() < 0.4)// шанс увернуться 40%
+            {
+                IsDefending = false;
+                Console.WriteLine(" Вы успешно уклонились от атаки!");
+                return;
+            }
+            else
+            {
+                int blockedDamage = (int)(actualDamage - actualDamage*CurrentArmor.Defense);
+
+                if (attacker.Type == EnemyType.Skeleton)
+                {
+                    blockedDamage = 0;
+                }
+
+                actualDamage = Math.Max(1, actualDamage - blockedDamage);
+                Console.WriteLine($"🛡️ Вы блокируете {blockedDamage} урона");
+            }
+            IsDefending = false;
+        }
+        else
+        {
+            if (attacker.Type != EnemyType.Skeleton)
+            {
+                actualDamage = Math.Max(1, actualDamage);
+            }
+        }
+
+        Health -= actualDamage;
+        Console.WriteLine($" Вы получаете {actualDamage} урона!");
+        Console.WriteLine($"❤️ Ваше здоровье: {Health}/{MaxHealth}");
     }
     public void Heal()
     {
@@ -57,10 +94,21 @@ public class Player
 
     public void Attack(Enemy enemy)
     {
-        
-    }
+        int playerDamage = CurrentWeapon.Damage;
+        Console.WriteLine($"⚔️ Вы наносите {playerDamage} урона!");
 
+        if (enemy.Health<=0)
+        {
+            Console.WriteLine($"🎯 {enemy.Type} побежден!");
+        }
+        else
+        {
+            Console.WriteLine($"❤️ Здоровье {enemy.Type}: {enemy.Health}/{enemy.MaxHealth}");
+        }
+    }
 }
+
+
 //---------------------------------ВРАГИ------------------------
 public enum EnemyType
 {
@@ -86,16 +134,43 @@ public class Enemy
         Defense = defense;
     }
 
-    public void TakeDamage(Player player)
+    public void TakeDamage(int damage)
     {
-
+        Health -= damage;
     }
 
     public virtual void AttackPlayer(Player player)
     {
-       
+        int damage = Attack;
+        Random random = new Random();
+
+        switch (Type)
+        {
+            case EnemyType.Goblin:
+                if (random.NextDouble() < 0.2) // шанс критического удара 20%
+                {
+                    damage *= 2;
+                    Console.WriteLine($"{Type} наносит критический удар!");
+                }
+                break;
+
+            case EnemyType.Mage:
+                if (random.NextDouble() < 0.15) // шанс заморозить 15%
+                {
+                    player.IsFrozen = true;
+                    Console.WriteLine($"{Type} замораживает вас! Вы пропустите следующий ход");
+                }
+                break;
+        }
+
+        if (!player.IsFrozen || Type != EnemyType.Mage)
+        {
+            Console.WriteLine($"{Type} атакует!");
+            player.TakeDamage(this);
+        }
     }
 }
+
 //----------------------------БОССЫ--------------------------
 public enum BossType
 {
@@ -162,9 +237,44 @@ public class Boss : Enemy
 
     public override void AttackPlayer(Player player)
     {
-   
+        int damage = Attack;
+        Random random = new Random();
+
+        switch (BossType)
+        {
+            case BossType.VVG:
+                if (random.NextDouble() < 0.3) //шанс критического удара( у обычных гоблинов 20%, а у босса 30%)
+                {
+                    damage *= 2;
+                    Console.WriteLine($"{BossType} наносит критический удар!");
+                }
+                break;
+
+            case BossType.ArchmageCPP:
+                if (random.NextDouble() < 0.25) // шанс на заморозку( у обычных магов 15%, а у босcа 25%)
+                {
+                    player.IsFrozen = true;
+                    Console.WriteLine($"{BossType} замораживает вас! Вы пропустите следующий ход");
+                }
+                break;
+
+            case BossType.PestovCMinus:
+                if (random.NextDouble() < 0.3) // шанс на заморозку( у обычных магов 15%, а у босcа 30%)
+                {
+                    player.IsFrozen = true;
+                    Console.WriteLine($"{BossType} замораживает вас! Вы пропустите следующий ход");
+                }
+                break;
+        }
+
+        if (!player.IsFrozen || (BossType != BossType.ArchmageCPP && BossType != BossType.PestovCMinus))
+        {
+            Console.WriteLine($"{BossType} атакует!");
+            player.TakeDamage(this);
+        }
     }
 }
+
 
 
 //-------------------------------------------ИГРА-------------------------------------------
