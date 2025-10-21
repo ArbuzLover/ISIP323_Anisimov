@@ -353,7 +353,10 @@ public class Game
 
     private void PrintPlayerStatus()
     {
-
+        Console.WriteLine($"\n=== Ход {Count} ===");
+        Console.WriteLine($"Здоровье: {player.Health}/{player.MaxHealth}");
+        Console.WriteLine($"Оружие: {player.CurrentWeapon}");
+        Console.WriteLine($"Доспехи: {player.CurrentArmor}");
     }
 
     private void FrozenCheck()
