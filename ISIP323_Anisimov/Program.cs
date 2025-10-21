@@ -11,6 +11,10 @@ public class Weapon
         Name = name;
         Damage = damage;
     }
+    public override string ToString()
+    {
+        return $"{Name}| Урон: {Damage}";
+    }
 }
 
 public class Armor
@@ -22,6 +26,11 @@ public class Armor
     {
         Name = name;
         Defense = defense;
+    }
+
+    public override string ToString()
+    {
+        return $"{Name}| Коэфициент защиты: {Defense}";
     }
 }
 
@@ -53,7 +62,7 @@ public class Player
             if (random.NextDouble() < 0.4)// шанс увернуться 40%
             {
                 IsDefending = false;
-                Console.WriteLine(" Вы успешно уклонились от атаки!");
+                Console.WriteLine("Вы успешно уклонились от атаки!");
                 return;
             }
             else
@@ -65,8 +74,8 @@ public class Player
                     blockedDamage = 0;
                 }
 
-                actualDamage = Math.Max(1, actualDamage - blockedDamage);
-                Console.WriteLine($"🛡️ Вы блокируете {blockedDamage} урона");
+                actualDamage = actualDamage - blockedDamage;
+                Console.WriteLine($"Вы блокируете {blockedDamage} урона");
             }
             IsDefending = false;
         }
@@ -74,18 +83,18 @@ public class Player
         {
             if (attacker.Type != EnemyType.Skeleton)
             {
-                actualDamage = Math.Max(1, actualDamage);
+                actualDamage = actualDamage;
             }
         }
 
         Health -= actualDamage;
-        Console.WriteLine($" Вы получаете {actualDamage} урона!");
-        Console.WriteLine($"❤️ Ваше здоровье: {Health}/{MaxHealth}");
+        Console.WriteLine($"Вы получаете {actualDamage} урона!");
+        Console.WriteLine($"Ваше здоровье: {Health}/{MaxHealth}");
     }
     public void Heal()
     {
         Health = MaxHealth;
-        Console.WriteLine("❤️ Ваше здоровье полностью восстановлено!");
+        Console.WriteLine("Ваше здоровье полностью восстановлено!");
     }
     public void Defend()
     {
@@ -95,15 +104,16 @@ public class Player
     public void Attack(Enemy enemy)
     {
         int playerDamage = CurrentWeapon.Damage;
-        Console.WriteLine($"⚔️ Вы наносите {playerDamage} урона!");
+        enemy.TakeDamage(playerDamage);
+        Console.WriteLine($"Вы наносите {playerDamage} урона!");
 
         if (enemy.Health<=0)
         {
-            Console.WriteLine($"🎯 {enemy.Type} побежден!");
+            Console.WriteLine($"{enemy.Type} побежден!");
         }
         else
         {
-            Console.WriteLine($"❤️ Здоровье {enemy.Type}: {enemy.Health}/{enemy.MaxHealth}");
+            Console.WriteLine($"Здоровье {enemy.Type}: {enemy.Health}/{enemy.MaxHealth}");
         }
     }
 }
@@ -292,7 +302,24 @@ public class Game
         player = new Player();
         random = new Random();
         Count = 0;
-        
+        weapons = new List<Weapon>
+            {
+                new Weapon("Кинжал", 5),
+                new Weapon("Меч", 8),
+                new Weapon("Булава", 10),
+                new Weapon("Двуручный меч", 15),
+                new Weapon("Волшебный посох", 18),
+                new Weapon("Легендарный клинок", 25)
+            };
+
+        armors = new List<Armor>
+            {
+                new Armor("Кожаный доспех", 0.7),
+                new Armor("Кольчуга", 0.75),
+                new Armor("Латы", 0.8),
+                new Armor("Эбонитовая броня", 0.9),
+                new Armor("Драконья броня", 1)
+            };
     }
 
     
@@ -331,7 +358,7 @@ public class Game
 
     private void FrozenCheck()
     {
-        Console.WriteLine("❄️ Вы заморожены и пропускаете ход!");
+        Console.WriteLine("Вы заморожены и пропускаете ход!");
         player.IsFrozen = false;
     }
 
@@ -377,7 +404,13 @@ public class Game
 
     private void FindEnemy()
     {
+        var enemyType = (EnemyType)random.Next(0, 3);
+        Enemy enemy = CreateEnemy(enemyType);
 
+        Console.WriteLine($"\nВы встретили {enemy.Type}!");
+        PrintEnemyInfo(enemy);
+
+        Combat(enemy);
     }
 
     private Enemy CreateEnemy(EnemyType type)
@@ -393,11 +426,18 @@ public class Game
 
     private void PrintEnemyInfo(Enemy enemy)
     {
-        Console.WriteLine($"❤ Здоровье врага: {enemy.Health} |  Атака: {enemy.Attack} |  Защита: {enemy.Defense}");
+        Console.WriteLine($"Здоровье врага: {enemy.Health} |  Атака: {enemy.Attack} |  Защита: {enemy.Defense}");
     }
 
     private void FindBoss()
     {
+        var bossType = (BossType)random.Next(0, 4);
+        Boss boss = CreateBoss(bossType);
+
+        Console.WriteLine($"\n БОСС! Перед вами {boss.BossType}!");
+        PrintEnemyInfo(boss);
+
+        Combat(boss);
 
     }
 
@@ -415,7 +455,31 @@ public class Game
 
     private void Combat(Enemy enemy)
     {
+        while (enemy.Health > 0 && player.Health > 0)
+        {
+            ShowCombatMenu();
 
+            string input = Console.ReadLine().Trim();
+            if (input == "1")
+            {
+                player.Attack(enemy);
+            }
+            else if (input == "2")
+            {
+                player.Defend();
+                Console.WriteLine("Вы готовитесь к защите!");
+            }
+            else
+            {
+                Console.WriteLine("Неверный ввод!");
+                continue;
+            }
+
+            if (enemy.Health > 0)
+            {
+                enemy.AttackPlayer(player);
+            }
+        }
     }
 
     private void ShowCombatMenu()
@@ -452,16 +516,51 @@ public class Game
 
     private void GiveWeapon()
     {
+        var newWeapon = weapons[random.Next(0, weapons.Count)];
+        Console.WriteLine($"В сундуке: {newWeapon}");
+        Console.WriteLine($"Ваше текущее оружие: {player.CurrentWeapon}");
 
+        Console.WriteLine("1. Взять новое оружие");
+        Console.WriteLine("2. Оставить текущее");
+
+        if (Console.ReadLine() == "1")
+        {
+            player.CurrentWeapon = newWeapon;
+            Console.WriteLine("Вы экипировали новое оружие!");
+        }
     }
 
     private void GiveArmor()
     {
+        var newArmor = armors[random.Next(0, armors.Count)];
+        Console.WriteLine($"В сундуке: {newArmor}");
+        Console.WriteLine($"Ваши текущие доспехи: {player.CurrentArmor}");
 
+        Console.WriteLine("1. Взять новые доспехи");
+        Console.WriteLine("2. Оставить текущие");
+
+        if (Console.ReadLine() == "1")
+        {
+            player.CurrentArmor = newArmor;
+            Console.WriteLine("Вы экипировали новые доспехи!");
+        }
     }
 
     private void GameOver()
     {
+        Console.WriteLine("\nИгра окончена!");
+        Console.WriteLine($"Вы продержались {Count} ходов");
+        Console.WriteLine("Спасибо за игру!");
+    }
 
+
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Game game = new Game();
+            game.StartGame();
+        }
     }
 }
