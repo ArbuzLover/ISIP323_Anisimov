@@ -8,13 +8,13 @@ class Program
 {
     static void Main()
     {
-        // Начальные настройки игры
-        decimal balance = 1000; // Начальный баланс
+        
+        decimal balance = 1000; 
         bool gameOver = false;
         Random random = new Random();
         List<Detail> parts = Core.Context.Detail.ToList();
 
-        // Список деталей: название, цена, количество
+        
         Console.WriteLine("=== АВТОМАСТЕРСКАЯ ===");
         Console.WriteLine("Добро пожаловать в автомастерскую!");
         Console.WriteLine($"Ваш начальный баланс: {balance} руб.");
