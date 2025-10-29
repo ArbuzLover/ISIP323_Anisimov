@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 
 class Program
 {
@@ -36,7 +37,7 @@ class Program
             Console.WriteLine($"Ваш баланс: {balance} руб.");
             Console.WriteLine($"Деталь '{brokenPart.Name}' в наличии: {brokenPart.Count} шт.");
 
-
+        Label:
             Console.WriteLine("\nВыберите действие:");
             Console.WriteLine("1 - Починить машину");
             Console.WriteLine("2 - Отказаться от ремонта");
@@ -57,7 +58,7 @@ class Program
                         Core.Context.SaveChanges();
 
                         balance += repairPayment;
-                        Console.WriteLine($"Вы успешно починили {brokenPart}!");
+                        Console.WriteLine($"Вы успешно починили {brokenPart.Name}!");
                         Console.WriteLine($"Получено: {repairPayment} руб.");
                     }
                     else
@@ -99,7 +100,7 @@ class Program
                             {
                                 balance -= totalCost;
                                 Detail editPart = Core.Context.Detail.First(u => u.Name.Contains(selectedPart.Name));
-                                editPart.Count -= count;
+                                editPart.Count += count;
                                 Core.Context.SaveChanges();
                                 Console.WriteLine($" Куплено {count} шт. '{selectedPart.Name}' за {totalCost} руб.");
                             }
@@ -117,7 +118,7 @@ class Program
                     {
                         Console.WriteLine("Неверный выбор детали!");
                     }
-                    break;
+                    goto Label;
 
                 case "4":
                     Console.WriteLine("\nСКЛАД ДЕТАЛЕЙ:");
@@ -126,7 +127,8 @@ class Program
                         Console.WriteLine($"- {part.Name}: {part.Count} шт. (цена: {part.Price} руб.)");
                     }
                     Console.WriteLine($" Баланс: {balance} руб.");
-                    break;
+
+                    goto Label;
 
                 case "0":
                     gameOver = true;
