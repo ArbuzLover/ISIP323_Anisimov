@@ -14,19 +14,12 @@ namespace ConsoleApp1
     
     public partial class Orders
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Orders()
-        {
-            this.Order_items = new HashSet<Order_items>();
-        }
-    
         public int ID { get; set; }
         public int UserID { get; set; }
         public int PVZID { get; set; }
-        public decimal Total_amount { get; set; }
+        public int ProductID { get; set; }
+        public decimal TotalAmount { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Order_items> Order_items { get; set; }
         public virtual PVZ PVZ { get; set; }
         public virtual Users Users { get; set; }
     }

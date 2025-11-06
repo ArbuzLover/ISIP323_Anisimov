@@ -8,6 +8,6 @@ namespace ConsoleApp1
 {
     internal class Core
     {
-        public static PR8_AnisimovEntities1 Context = new PR8_AnisimovEntities1();
+        public static PR8_AnisimovEntities2 Context = new PR8_AnisimovEntities2();
     }
 }
