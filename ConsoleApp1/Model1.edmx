@@ -14,6 +14,16 @@
           <Property Name="ProductID" Type="int" Nullable="false" />
           <Property Name="PVZID" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="Order_items">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="OrderID" Type="int" Nullable="false" />
+          <Property Name="ProductID" Type="int" Nullable="false" />
+          <Property Name="Quantity" Type="int" Nullable="false" />
+          <Property Name="Price" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+        </EntityType>
         <EntityType Name="Orders">
           <Key>
             <PropertyRef Name="ID" />
@@ -22,7 +32,7 @@
           <Property Name="UserID" Type="int" Nullable="false" />
           <Property Name="PVZID" Type="int" Nullable="false" />
           <Property Name="ProductID" Type="int" Nullable="false" />
-          <Property Name="TotalAmount" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="Date" Type="date" Nullable="false" />
         </EntityType>
         <EntityType Name="Products">
           <Key>
@@ -95,6 +105,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Order_items_Orders">
+          <End Role="Orders" Type="Self.Orders" Multiplicity="1" />
+          <End Role="Order_items" Type="Self.Order_items" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Orders">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Order_items">
+              <PropertyRef Name="OrderID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Order_items_Products">
+          <End Role="Products" Type="Self.Products" Multiplicity="1" />
+          <End Role="Order_items" Type="Self.Order_items" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Order_items">
+              <PropertyRef Name="ProductID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Orders_PVZ">
           <End Role="PVZ" Type="Self.PVZ" Multiplicity="1" />
           <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
@@ -121,6 +155,7 @@
         </Association>
         <EntityContainer Name="Хранилище PR8_AnisimovModelContainer">
           <EntitySet Name="Cart" EntityType="Self.Cart" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Order_items" EntityType="Self.Order_items" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Orders" EntityType="Self.Orders" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Products" EntityType="Self.Products" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PVZ" EntityType="Self.PVZ" Schema="dbo" store:Type="Tables" />
@@ -137,6 +172,14 @@
           <AssociationSet Name="FK_Cart_Users" Association="Self.FK_Cart_Users">
             <End Role="Users" EntitySet="Users" />
             <End Role="Cart" EntitySet="Cart" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Order_items_Orders" Association="Self.FK_Order_items_Orders">
+            <End Role="Orders" EntitySet="Orders" />
+            <End Role="Order_items" EntitySet="Order_items" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Order_items_Products" Association="Self.FK_Order_items_Products">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="Order_items" EntitySet="Order_items" />
           </AssociationSet>
           <AssociationSet Name="FK_Orders_PVZ" Association="Self.FK_Orders_PVZ">
             <End Role="PVZ" EntitySet="PVZ" />
@@ -164,6 +207,18 @@
           <NavigationProperty Name="PVZ" Relationship="Self.FK_Cart_PVZ" FromRole="Cart" ToRole="PVZ" />
           <NavigationProperty Name="Users" Relationship="Self.FK_Cart_Users" FromRole="Cart" ToRole="Users" />
         </EntityType>
+        <EntityType Name="Order_items">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="OrderID" Type="Int32" Nullable="false" />
+          <Property Name="ProductID" Type="Int32" Nullable="false" />
+          <Property Name="Quantity" Type="Int32" Nullable="false" />
+          <Property Name="Price" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+          <NavigationProperty Name="Orders" Relationship="Self.FK_Order_items_Orders" FromRole="Order_items" ToRole="Orders" />
+          <NavigationProperty Name="Products" Relationship="Self.FK_Order_items_Products" FromRole="Order_items" ToRole="Products" />
+        </EntityType>
         <EntityType Name="Orders">
           <Key>
             <PropertyRef Name="ID" />
@@ -172,7 +227,8 @@
           <Property Name="UserID" Type="Int32" Nullable="false" />
           <Property Name="PVZID" Type="Int32" Nullable="false" />
           <Property Name="ProductID" Type="Int32" Nullable="false" />
-          <Property Name="TotalAmount" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
+          <NavigationProperty Name="Order_items" Relationship="Self.FK_Order_items_Orders" FromRole="Orders" ToRole="Order_items" />
           <NavigationProperty Name="PVZ" Relationship="Self.FK_Orders_PVZ" FromRole="Orders" ToRole="PVZ" />
           <NavigationProperty Name="Users" Relationship="Self.FK_Orders_Users" FromRole="Orders" ToRole="Users" />
         </EntityType>
@@ -185,6 +241,7 @@
           <Property Name="Price" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
           <Property Name="Quantity" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
           <NavigationProperty Name="Cart" Relationship="Self.FK_Cart_Products" FromRole="Products" ToRole="Cart" />
+          <NavigationProperty Name="Order_items" Relationship="Self.FK_Order_items_Products" FromRole="Products" ToRole="Order_items" />
         </EntityType>
         <EntityType Name="PVZ">
           <Key>
@@ -252,6 +309,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Order_items_Orders">
+          <End Role="Orders" Type="Self.Orders" Multiplicity="1" />
+          <End Role="Order_items" Type="Self.Order_items" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Orders">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Order_items">
+              <PropertyRef Name="OrderID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Order_items_Products">
+          <End Role="Products" Type="Self.Products" Multiplicity="1" />
+          <End Role="Order_items" Type="Self.Order_items" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Order_items">
+              <PropertyRef Name="ProductID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Orders_PVZ">
           <End Role="PVZ" Type="Self.PVZ" Multiplicity="1" />
           <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
@@ -276,8 +357,9 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="PR8_AnisimovEntities2" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="PR8_AnisimovEntities3" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Cart" EntityType="Self.Cart" />
+          <EntitySet Name="Order_items" EntityType="Self.Order_items" />
           <EntitySet Name="Orders" EntityType="Self.Orders" />
           <EntitySet Name="Products" EntityType="Self.Products" />
           <EntitySet Name="PVZ" EntityType="Self.PVZ" />
@@ -295,6 +377,14 @@
             <End Role="Users" EntitySet="Users" />
             <End Role="Cart" EntitySet="Cart" />
           </AssociationSet>
+          <AssociationSet Name="FK_Order_items_Orders" Association="Self.FK_Order_items_Orders">
+            <End Role="Orders" EntitySet="Orders" />
+            <End Role="Order_items" EntitySet="Order_items" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Order_items_Products" Association="Self.FK_Order_items_Products">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="Order_items" EntitySet="Order_items" />
+          </AssociationSet>
           <AssociationSet Name="FK_Orders_PVZ" Association="Self.FK_Orders_PVZ">
             <End Role="PVZ" EntitySet="PVZ" />
             <End Role="Orders" EntitySet="Orders" />
@@ -309,7 +399,7 @@
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="Хранилище PR8_AnisimovModelContainer" CdmEntityContainer="PR8_AnisimovEntities2">
+        <EntityContainerMapping StorageEntityContainer="Хранилище PR8_AnisimovModelContainer" CdmEntityContainer="PR8_AnisimovEntities3">
           <EntitySetMapping Name="Cart">
             <EntityTypeMapping TypeName="PR8_AnisimovModel.Cart">
               <MappingFragment StoreEntitySet="Cart">
@@ -320,6 +410,17 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="Order_items">
+            <EntityTypeMapping TypeName="PR8_AnisimovModel.Order_items">
+              <MappingFragment StoreEntitySet="Order_items">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="OrderID" ColumnName="OrderID" />
+                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Orders">
             <EntityTypeMapping TypeName="PR8_AnisimovModel.Orders">
               <MappingFragment StoreEntitySet="Orders">
@@ -327,7 +428,7 @@
                 <ScalarProperty Name="UserID" ColumnName="UserID" />
                 <ScalarProperty Name="PVZID" ColumnName="PVZID" />
                 <ScalarProperty Name="ProductID" ColumnName="ProductID" />
-                <ScalarProperty Name="TotalAmount" ColumnName="TotalAmount" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

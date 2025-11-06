@@ -13,10 +13,10 @@ namespace ConsoleApp1
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class PR8_AnisimovEntities2 : DbContext
+    public partial class PR8_AnisimovEntities3 : DbContext
     {
-        public PR8_AnisimovEntities2()
-            : base("name=PR8_AnisimovEntities2")
+        public PR8_AnisimovEntities3()
+            : base("name=PR8_AnisimovEntities3")
         {
         }
     
@@ -26,6 +26,7 @@ namespace ConsoleApp1
         }
     
         public virtual DbSet<Cart> Cart { get; set; }
+        public virtual DbSet<Order_items> Order_items { get; set; }
         public virtual DbSet<Orders> Orders { get; set; }
         public virtual DbSet<Products> Products { get; set; }
         public virtual DbSet<PVZ> PVZ { get; set; }

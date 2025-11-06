@@ -18,6 +18,7 @@ namespace ConsoleApp1
         public Products()
         {
             this.Cart = new HashSet<Cart>();
+            this.Order_items = new HashSet<Order_items>();
         }
     
         public int ID { get; set; }
@@ -27,5 +28,7 @@ namespace ConsoleApp1
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Cart> Cart { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Order_items> Order_items { get; set; }
     }
 }

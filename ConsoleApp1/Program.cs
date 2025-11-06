@@ -99,7 +99,8 @@ namespace ConsoleApp1
                         {
                             UserID = id,
                             ProductID = cart.ProductID,
-                            PVZID = id_pvz
+                            PVZID = id_pvz,
+                            Date = DateTime.Now
                         };
                         Core.Context.Orders.Add(NewOrder);
                         Core.Context.Cart.Remove(cart);
@@ -108,6 +109,34 @@ namespace ConsoleApp1
                     }
                 }
                 Console.WriteLine("Заказ оформлен и скоро будет доставлен");
+            }
+        }
+
+        public static void HistoryOrders()
+        {
+            int tempID = users.First(x => x.Name == Login).ID;
+            List<Orders> order_user = Core.Context.Orders.Where(u => u.UserID == tempID).ToList();
+            var groupedOrders = order_user
+            .GroupBy(orders => new DateTime(orders.Date.Year, orders.Date.Month, orders.Date.Day, orders.Date.Hour, orders.Date.Minute, 0))
+    .OrderBy(group => group.Key)
+    .ToList();
+
+            foreach (var orderGroup in groupedOrders)
+            {
+                Console.WriteLine($"Заказ от {orderGroup.Key:dd.MM.yyyy HH:mm}");
+                Console.WriteLine("Товары в заказе:");
+
+                foreach (var item in orderGroup)
+                {
+                    foreach (Products prod in products)
+                    {
+                        if (prod.ID == item.ProductID)
+                        {
+                            Console.WriteLine($"  - {prod.Name},{prod.Price}");
+                        }
+                    }
+                }
+
             }
         }
 
@@ -143,7 +172,7 @@ namespace ConsoleApp1
 
                                     break;
                                 case 3:
-                                    history_of_orders();
+                                    HistoryOrders();
                                     break;
                             }
                         }
