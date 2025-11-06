@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -146,20 +147,20 @@ namespace ConsoleApp1
             Login = Console.ReadLine();
             Console.WriteLine("Войдите в аккаунт,введите ваш пароль");
             string password = Console.ReadLine();
-            int id_user = users.First(x => x.Name == Login).ID;
+            int id_user = Core.Context.Users.First(x => x.Name == Login).ID;
             foreach (Users user in users)
             {
-                if (user.Name == Login)
+                if (user.Name.Trim() == Login)
                 {
-                    if (user.Password == password)
+                    if (user.Password.Trim() == password)
                     {
                         Console.WriteLine("Вы успешно вошли в свою учетную запись");
                         while (true)
                         {
                             Console.WriteLine("Выберете:" +
-                                "1: Cписок товаров и добавление в корзину" +
-                                "2: Корзина и оформление заказа" +
-                                "3: Просмотр истории заказов с датой");
+                                "1: Cписок товаров и добавление в корзину\n" +
+                                "2: Корзина и оформление заказа\n" +
+                                "3: Просмотр истории заказов с датой\n");
                             int temp = Convert.ToInt32(Console.ReadLine());
                             switch (temp)
                             {
@@ -175,25 +176,26 @@ namespace ConsoleApp1
                                     HistoryOrders();
                                     break;
                             }
-                        }
+                        }  
 
 
                     }
+                    else { Console.WriteLine("Неправильный пароль"); }
                 }
+                else { Console.WriteLine("Неправильный логин"); }
             }
-
         }
 
 
         static void Main(string[] args)
         {
-            Console.WriteLine("Выберете действие");
+            Console.WriteLine("=========МЕНЮ========");
             while (true)
             {
-                Console.WriteLine("Выбирете:" +
-                    "1: Просмотр товара" +
-                    "2: Регистрация" +
-                    "3: Вход в аккаунт");
+                Console.WriteLine("Выберете: \n" +
+                    "1 - Просмотр товара\n" +
+                    "2 - Регистрация\n" +
+                    "3 - Вход в аккаунт\n");
                 int temp_choice = Convert.ToInt32(Console.ReadLine());
                 switch (temp_choice)
                 {
