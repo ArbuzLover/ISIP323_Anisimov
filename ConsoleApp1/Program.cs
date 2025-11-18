@@ -69,8 +69,9 @@ namespace ConsoleApp1
         }
         public static void AddOrder()
         {
-            int id = users.First(u => u.Name == Login).ID;
-            List<Cart> order = Carts.Where(u => u.UserID == id).ToList();
+            Users userS = users.FirstOrDefault(u => u.Name == Login);
+ 
+            List<Cart> order = Carts.Where(u => u.UserID == userS.ID).ToList();
             foreach (var cart in order)
             {
                 foreach (var prod in products)
@@ -95,11 +96,11 @@ namespace ConsoleApp1
                 int id_pvz = Convert.ToInt32(Console.ReadLine());
                 foreach (Cart cart in order)
                 {
-                    if (id == cart.UserID)
+                    if (userS.ID == cart.UserID)
                     {
                         Orders NewOrder = new Orders()
                         {
-                            UserID = id,
+                            UserID = userS.ID,
                             ProductID = cart.ProductID,
                             PVZID = id_pvz,
                             Date = DateTime.Now
@@ -148,46 +149,40 @@ namespace ConsoleApp1
             Login = Console.ReadLine();
             Console.WriteLine("Войдите в аккаунт,введите ваш пароль");
             string password = Console.ReadLine();
-            Users userS = Core.Context.Users.FirstOrDefault(x => x.Name == Login);
-            foreach (Users user in users)
+            Users userS = Core.Context.Users.FirstOrDefault(x => x.Name == Login && x.Password == password);
+            if (userS != null)
             {
-                if (user.Name.Trim() == Login)
+                Console.WriteLine("Вы успешно вошли в свою учетную запись");
+                while (true)
                 {
-                    if (user.Password.Trim() == password)
+                    Console.WriteLine("Выберете:" +
+                        "1: Cписок товаров и добавление в корзину\n" +
+                        "2: Корзина и оформление заказа\n" +
+                        "3: Просмотр истории заказов с датой\n");
+                    int temp = Convert.ToInt32(Console.ReadLine());
+                    switch (temp)
                     {
-                        Console.WriteLine("Вы успешно вошли в свою учетную запись");
-                        while (true)
-                        {
-                            Console.WriteLine("Выберете:" +
-                                "1: Cписок товаров и добавление в корзину\n" +
-                                "2: Корзина и оформление заказа\n" +
-                                "3: Просмотр истории заказов с датой\n");
-                            int temp = Convert.ToInt32(Console.ReadLine());
-                            switch (temp)
-                            {
-                                case 1:
-                                    PrintAllProducts();
-                                    AddCart();
-                                    break;
-                                case 2:
-                                    AddOrder();
+                        case 1:
+                            PrintAllProducts();
+                            AddCart();
+                            break;
+                        case 2:
+                            AddOrder();
 
-                                    break;
-                                case 3:
-                                    HistoryOrders();
-                                    break;
-                            }
-                        }  
-
-
+                            break;
+                        case 3:
+                            HistoryOrders();
+                            break;
                     }
-                    else { Console.WriteLine("Неправильный пароль"); }
                 }
-                else { Console.WriteLine("Неправильный логин"); }
             }
+            else
+            {
+                Console.WriteLine("Неправильный логин или пароль");
+            }
+
+
         }
-
-
         static void Main(string[] args)
         {
             Console.WriteLine("=========МЕНЮ========");
