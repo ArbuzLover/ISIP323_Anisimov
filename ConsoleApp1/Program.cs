@@ -77,13 +77,14 @@ namespace ConsoleApp1
                 {
                     if (prod.ID == cart.ProductID)
                     {
-                        Console.WriteLine($"id:{prod.ID},{prod.Name},цена:{prod.Price}, количество: {prod.Quantity}");
+                        Console.WriteLine($"id:{prod.ID},{prod.Name.Trim()},цена:{prod.Price}, количество: {prod.Quantity}");
                     }
                 }
             }
-            Console.WriteLine(" хотите ли вы заказать все эти товары?y/n");
+            
+            Console.WriteLine("Заказать все товары - 1");
             string temp_choice = Console.ReadLine();
-            if (temp_choice == "y")
+            if (temp_choice == "1")
             {
                 Console.WriteLine("Выберете пвз");
                 foreach (PVZ punkt in pvz)
@@ -133,7 +134,7 @@ namespace ConsoleApp1
                     {
                         if (prod.ID == item.ProductID)
                         {
-                            Console.WriteLine($"  - {prod.Name},{prod.Price}");
+                            Console.WriteLine($"{prod.Name},{prod.Price}");
                         }
                     }
                 }
@@ -147,7 +148,7 @@ namespace ConsoleApp1
             Login = Console.ReadLine();
             Console.WriteLine("Войдите в аккаунт,введите ваш пароль");
             string password = Console.ReadLine();
-            int id_user = Core.Context.Users.First(x => x.Name == Login).ID;
+            Users userS = Core.Context.Users.FirstOrDefault(x => x.Name == Login);
             foreach (Users user in users)
             {
                 if (user.Name.Trim() == Login)

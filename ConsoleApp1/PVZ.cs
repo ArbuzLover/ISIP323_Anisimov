@@ -17,7 +17,6 @@ namespace ConsoleApp1
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public PVZ()
         {
-            this.Cart = new HashSet<Cart>();
             this.Orders = new HashSet<Orders>();
         }
     
@@ -25,8 +24,6 @@ namespace ConsoleApp1
         public string Name { get; set; }
         public string Addres { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Cart> Cart { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Orders> Orders { get; set; }
     }

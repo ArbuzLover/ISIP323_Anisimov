@@ -13,10 +13,10 @@ namespace ConsoleApp1
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class PR8_AnisimovEntities3 : DbContext
+    public partial class PR8_AnisimovEntities4 : DbContext
     {
-        public PR8_AnisimovEntities3()
-            : base("name=PR8_AnisimovEntities3")
+        public PR8_AnisimovEntities4()
+            : base("name=PR8_AnisimovEntities4")
         {
         }
     

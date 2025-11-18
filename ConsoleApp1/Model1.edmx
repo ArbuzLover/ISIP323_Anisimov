@@ -12,7 +12,6 @@
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="UserID" Type="int" Nullable="false" />
           <Property Name="ProductID" Type="int" Nullable="false" />
-          <Property Name="PVZID" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Order_items">
           <Key>
@@ -40,8 +39,8 @@
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nchar" MaxLength="100" Nullable="false" />
-          <Property Name="Price" Type="decimal" Precision="18" Scale="0" Nullable="false" />
-          <Property Name="Quantity" Type="nchar" MaxLength="10" />
+          <Property Name="Price" Type="decimal" Precision="5" Scale="0" Nullable="false" />
+          <Property Name="Quantity" Type="nchar" MaxLength="10" Nullable="false" />
         </EntityType>
         <EntityType Name="PVZ">
           <Key>
@@ -66,7 +65,7 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Name" Type="nchar" MaxLength="100" Nullable="false" />
+          <Property Name="Name" Type="nchar" MaxLength="4" Nullable="false" />
           <Property Name="Password" Type="nchar" MaxLength="100" Nullable="false" />
         </EntityType>
         <Association Name="FK_Cart_Products">
@@ -78,18 +77,6 @@
             </Principal>
             <Dependent Role="Cart">
               <PropertyRef Name="ProductID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Cart_PVZ">
-          <End Role="PVZ" Type="Self.PVZ" Multiplicity="1" />
-          <End Role="Cart" Type="Self.Cart" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="PVZ">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Cart">
-              <PropertyRef Name="PVZID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -165,10 +152,6 @@
             <End Role="Products" EntitySet="Products" />
             <End Role="Cart" EntitySet="Cart" />
           </AssociationSet>
-          <AssociationSet Name="FK_Cart_PVZ" Association="Self.FK_Cart_PVZ">
-            <End Role="PVZ" EntitySet="PVZ" />
-            <End Role="Cart" EntitySet="Cart" />
-          </AssociationSet>
           <AssociationSet Name="FK_Cart_Users" Association="Self.FK_Cart_Users">
             <End Role="Users" EntitySet="Users" />
             <End Role="Cart" EntitySet="Cart" />
@@ -202,9 +185,7 @@
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="UserID" Type="Int32" Nullable="false" />
           <Property Name="ProductID" Type="Int32" Nullable="false" />
-          <Property Name="PVZID" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Products" Relationship="Self.FK_Cart_Products" FromRole="Cart" ToRole="Products" />
-          <NavigationProperty Name="PVZ" Relationship="Self.FK_Cart_PVZ" FromRole="Cart" ToRole="PVZ" />
           <NavigationProperty Name="Users" Relationship="Self.FK_Cart_Users" FromRole="Cart" ToRole="Users" />
         </EntityType>
         <EntityType Name="Order_items">
@@ -238,8 +219,8 @@
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" MaxLength="100" FixedLength="true" Unicode="true" Nullable="false" />
-          <Property Name="Price" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
-          <Property Name="Quantity" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Price" Type="Decimal" Precision="5" Scale="0" Nullable="false" />
+          <Property Name="Quantity" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
           <NavigationProperty Name="Cart" Relationship="Self.FK_Cart_Products" FromRole="Products" ToRole="Cart" />
           <NavigationProperty Name="Order_items" Relationship="Self.FK_Order_items_Products" FromRole="Products" ToRole="Order_items" />
         </EntityType>
@@ -250,7 +231,6 @@
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" MaxLength="100" FixedLength="true" Unicode="true" Nullable="false" />
           <Property Name="Addres" Type="String" MaxLength="100" FixedLength="true" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="Cart" Relationship="Self.FK_Cart_PVZ" FromRole="PVZ" ToRole="Cart" />
           <NavigationProperty Name="Orders" Relationship="Self.FK_Orders_PVZ" FromRole="PVZ" ToRole="Orders" />
         </EntityType>
         <EntityType Name="sysdiagrams">
@@ -268,7 +248,7 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="100" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="4" FixedLength="true" Unicode="true" Nullable="false" />
           <Property Name="Password" Type="String" MaxLength="100" FixedLength="true" Unicode="true" Nullable="false" />
           <NavigationProperty Name="Cart" Relationship="Self.FK_Cart_Users" FromRole="Users" ToRole="Cart" />
           <NavigationProperty Name="Orders" Relationship="Self.FK_Orders_Users" FromRole="Users" ToRole="Orders" />
@@ -282,18 +262,6 @@
             </Principal>
             <Dependent Role="Cart">
               <PropertyRef Name="ProductID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Cart_PVZ">
-          <End Role="PVZ" Type="Self.PVZ" Multiplicity="1" />
-          <End Role="Cart" Type="Self.Cart" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="PVZ">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Cart">
-              <PropertyRef Name="PVZID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -357,7 +325,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="PR8_AnisimovEntities3" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="PR8_AnisimovEntities4" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Cart" EntityType="Self.Cart" />
           <EntitySet Name="Order_items" EntityType="Self.Order_items" />
           <EntitySet Name="Orders" EntityType="Self.Orders" />
@@ -367,10 +335,6 @@
           <EntitySet Name="Users" EntityType="Self.Users" />
           <AssociationSet Name="FK_Cart_Products" Association="Self.FK_Cart_Products">
             <End Role="Products" EntitySet="Products" />
-            <End Role="Cart" EntitySet="Cart" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Cart_PVZ" Association="Self.FK_Cart_PVZ">
-            <End Role="PVZ" EntitySet="PVZ" />
             <End Role="Cart" EntitySet="Cart" />
           </AssociationSet>
           <AssociationSet Name="FK_Cart_Users" Association="Self.FK_Cart_Users">
@@ -399,14 +363,13 @@
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="Хранилище PR8_AnisimovModelContainer" CdmEntityContainer="PR8_AnisimovEntities3">
+        <EntityContainerMapping StorageEntityContainer="Хранилище PR8_AnisimovModelContainer" CdmEntityContainer="PR8_AnisimovEntities4">
           <EntitySetMapping Name="Cart">
             <EntityTypeMapping TypeName="PR8_AnisimovModel.Cart">
               <MappingFragment StoreEntitySet="Cart">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="UserID" ColumnName="UserID" />
                 <ScalarProperty Name="ProductID" ColumnName="ProductID" />
-                <ScalarProperty Name="PVZID" ColumnName="PVZID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

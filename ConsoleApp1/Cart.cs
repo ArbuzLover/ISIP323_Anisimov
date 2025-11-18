@@ -17,10 +17,8 @@ namespace ConsoleApp1
         public int ID { get; set; }
         public int UserID { get; set; }
         public int ProductID { get; set; }
-        public int PVZID { get; set; }
     
         public virtual Products Products { get; set; }
-        public virtual PVZ PVZ { get; set; }
         public virtual Users Users { get; set; }
     }
 }
